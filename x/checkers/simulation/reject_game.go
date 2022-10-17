@@ -10,7 +10,7 @@ import (
 	"github.com/jcompagni10/checkers/x/checkers/types"
 )
 
-func SimulateMsgPlayMove(
+func SimulateMsgRejectGame(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -18,12 +18,12 @@ func SimulateMsgPlayMove(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgPlayMove{
+		msg := &types.MsgRejectGame{
 			Creator: simAccount.Address.String(),
 		}
 
-		// TODO: Handling the PlayMove simulation
+		// TODO: Handling the RejectGame simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "PlayMove simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "RejectGame simulation not implemented"), nil, nil
 	}
 }

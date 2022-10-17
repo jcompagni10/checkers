@@ -29870,6 +29870,13 @@ paths:
                       type: string
                     red:
                       type: string
+                    moveCount:
+                      type: string
+                      format: uint64
+                    beforeIndex:
+                      type: string
+                    afterIndex:
+                      type: string
               pagination:
                 type: object
                 properties:
@@ -29997,6 +30004,13 @@ paths:
                     type: string
                   red:
                     type: string
+                  moveCount:
+                    type: string
+                    format: uint64
+                  beforeIndex:
+                    type: string
+                  afterIndex:
+                    type: string
         default:
           description: An unexpected error response.
           schema:
@@ -30038,6 +30052,10 @@ paths:
                   nextId:
                     type: string
                     format: uint64
+                  fifoHeadIndex:
+                    type: string
+                  fifoTailIndex:
+                    type: string
         default:
           description: An unexpected error response.
           schema:
@@ -51781,6 +51799,8 @@ definitions:
         format: int32
       winner:
         type: string
+  jcompagni10.checkers.checkers.MsgRejectGameResponse:
+    type: object
   jcompagni10.checkers.checkers.Params:
     type: object
     description: Params defines the parameters for the module.
@@ -51801,6 +51821,13 @@ definitions:
             black:
               type: string
             red:
+              type: string
+            moveCount:
+              type: string
+              format: uint64
+            beforeIndex:
+              type: string
+            afterIndex:
               type: string
       pagination:
         type: object
@@ -51843,6 +51870,13 @@ definitions:
             type: string
           red:
             type: string
+          moveCount:
+            type: string
+            format: uint64
+          beforeIndex:
+            type: string
+          afterIndex:
+            type: string
   jcompagni10.checkers.checkers.QueryGetSystemInfoResponse:
     type: object
     properties:
@@ -51852,6 +51886,10 @@ definitions:
           nextId:
             type: string
             format: uint64
+          fifoHeadIndex:
+            type: string
+          fifoTailIndex:
+            type: string
   jcompagni10.checkers.checkers.QueryParamsResponse:
     type: object
     properties:
@@ -51872,12 +51910,23 @@ definitions:
         type: string
       red:
         type: string
+      moveCount:
+        type: string
+        format: uint64
+      beforeIndex:
+        type: string
+      afterIndex:
+        type: string
   jcompagni10.checkers.checkers.SystemInfo:
     type: object
     properties:
       nextId:
         type: string
         format: uint64
+      fifoHeadIndex:
+        type: string
+      fifoTailIndex:
+        type: string
   tendermint.spn.claim.ClaimRecord:
     type: object
     properties:

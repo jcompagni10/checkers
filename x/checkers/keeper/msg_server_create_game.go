@@ -2,10 +2,10 @@ package keeper
 
 import (
 	"context"
-	"strconv"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/jcompagni10/checkers/x/checkers/types"
 	"github.com/jcompagni10/checkers/x/checkers/rules"
+	"github.com/jcompagni10/checkers/x/checkers/types"
+	"strconv"
 )
 
 func (k msgServer) CreateGame(goCtx context.Context, msg *types.MsgCreateGame) (*types.MsgCreateGameResponse, error) {
@@ -20,19 +20,17 @@ func (k msgServer) CreateGame(goCtx context.Context, msg *types.MsgCreateGame) (
 
 	newIndex := strconv.FormatUint(systemInfo.NextId, 10)
 
-	_ = ctx
-
 	newGame := rules.New()
 	storedGame := types.StoredGame{
 		Index: newIndex,
 		Board: newGame.String(),
-		Turn: rules.PieceStrings[newGame.Turn],
+		Turn:  rules.PieceStrings[newGame.Turn],
 		Black: msg.Black,
-		Red: msg.Red,
+		Red:   msg.Red,
 	}
 
 	err := storedGame.Validate()
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 
@@ -40,6 +38,15 @@ func (k msgServer) CreateGame(goCtx context.Context, msg *types.MsgCreateGame) (
 
 	systemInfo.NextId++
 	k.Keeper.SetSystemInfo(ctx, systemInfo)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(types.GameCreatedEventType,
+			sdk.NewAttribute(types.GameCreatedEventCreator, msg.Creator),
+			sdk.NewAttribute(types.GameCreatedEventGameIndex, newIndex),
+			sdk.NewAttribute(types.GameCreatedEventBlack, msg.Black),
+			sdk.NewAttribute(types.GameCreatedEventRed, msg.Red),
+		),
+	)
 
 	return &types.MsgCreateGameResponse{
 		GameIndex: newIndex,

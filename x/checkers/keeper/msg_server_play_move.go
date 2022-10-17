@@ -21,6 +21,10 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 	isBlack := storedGame.Black == msg.Creator
 	isRed := storedGame.Red == msg.Creator
 
+	if storedGame.Winner != rules.PieceStrings[rules.NO_PLAYER] {
+    return nil, types.ErrGameFinished
+	}
+
 	var player rules.Player
 
 	if !isBlack && !isRed {
@@ -62,6 +66,15 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 
 	k.Keeper.SendToFifoTail(ctx, &storedGame, &systemInfo)
 
+	lastBoard := game.String()
+	if storedGame.Winner == rules.PieceStrings[rules.NO_PLAYER] {
+    k.Keeper.SendToFifoTail(ctx, &storedGame, &systemInfo)
+    storedGame.Board = lastBoard
+	} else {
+    k.Keeper.RemoveFromFifo(ctx, &storedGame, &systemInfo)
+    storedGame.Board = ""
+	}
+
 	k.Keeper.SetSystemInfo(ctx, systemInfo)
 
 	storedGame.Board = game.String()
@@ -69,6 +82,9 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 	storedGame.MoveCount ++
 
 	storedGame.Deadline = types.FormatDeadline(types.GetNextDeadline(ctx))
+
+	storedGame.Winner = rules.PieceStrings[game.Winner()]
+
 
 
 	k.Keeper.SetStoredGame(ctx, storedGame)
@@ -80,6 +96,8 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 			sdk.NewAttribute(types.MovePlayedEventCapturedX, strconv.FormatInt(int64(captured.X), 10)),
 			sdk.NewAttribute(types.MovePlayedEventCapturedY, strconv.FormatInt(int64(captured.Y), 10)),
 			sdk.NewAttribute(types.MovePlayedEventWinner, rules.PieceStrings[game.Winner()]),
+			sdk.NewAttribute(types.MovePlayedEventBoard, lastBoard),
+
 		),
 	)
 

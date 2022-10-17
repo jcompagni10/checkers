@@ -28,6 +28,7 @@ func (k msgServer) CreateGame(goCtx context.Context, msg *types.MsgCreateGame) (
 		Black: msg.Black,
 		Red:   msg.Red,
 		MoveCount: 0,
+		Winner:    rules.PieceStrings[rules.NO_PLAYER],
 		BeforeIndex: types.NoFifoIndex,
 		AfterIndex: types.NoFifoIndex,
 		Deadline: types.FormatDeadline(types.GetNextDeadline(ctx)),

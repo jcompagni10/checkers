@@ -12,6 +12,7 @@ message StoredGame {
   uint64 moveCount = 6;
   string beforeIndex = 7; //FIFO DS head
   string afterIndex = 8; // FIFO DS tail
+  string deadline = 9;
 
   
 }

@@ -18,6 +18,8 @@ func (k msgServer) CreateGame(goCtx context.Context, msg *types.MsgCreateGame) (
 		panic("Systeminfo not found")
 	}
 
+	ctx.GasMeter().ConsumeGas(types.CreateGameGas, "Create game")
+
 	newIndex := strconv.FormatUint(systemInfo.NextId, 10)
 
 	newGame := rules.New()

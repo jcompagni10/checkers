@@ -10,6 +10,13 @@ import (
 func (k msgServer) RejectGame(goCtx context.Context, msg *types.MsgRejectGame) (*types.MsgRejectGameResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+
+	refund := uint64(types.RejectGameRefundGas)
+	if consumed := ctx.GasMeter().GasConsumed(); consumed < refund {
+    refund = consumed
+	}
+	ctx.GasMeter().RefundGas(refund, "Reject game")
+	
 	storedGame, found := k.Keeper.GetStoredGame(ctx, msg.GameIndex)
 	if !found {
     return nil, sdkerrors.Wrapf(types.ErrGameNotFound, "%s", msg.GameIndex)

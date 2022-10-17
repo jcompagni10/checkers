@@ -14,6 +14,8 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 
 	storedGame, found := k.Keeper.GetStoredGame(ctx, msg.GameIndex)
 
+	ctx.GasMeter().ConsumeGas(types.PlayMoveGas, "Play a move")
+
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrGameNotFound, "%s", msg.GameIndex)
 	}

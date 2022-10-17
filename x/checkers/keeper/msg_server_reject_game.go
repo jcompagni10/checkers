@@ -38,6 +38,9 @@ func (k msgServer) RejectGame(goCtx context.Context, msg *types.MsgRejectGame) (
 
 	k.Keeper.SetSystemInfo(ctx, systemInfo)
 
+	k.Keeper.MustRefundWager(ctx, &storedGame)
+
+
 	ctx.EventManager().EmitEvent(
     sdk.NewEvent(types.GameRejectedEventType,
 			sdk.NewAttribute(types.GameRejectedEventCreator, msg.Creator),

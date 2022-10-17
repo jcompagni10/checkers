@@ -73,6 +73,7 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 	} else {
     k.Keeper.RemoveFromFifo(ctx, &storedGame, &systemInfo)
     storedGame.Board = ""
+		k.Keeper.MustPayWinnings(ctx, &storedGame)
 	}
 
 	k.Keeper.SetSystemInfo(ctx, systemInfo)
